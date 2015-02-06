@@ -1,0 +1,40 @@
+{
+  "name": "strim",
+  "version": "0.1.0",
+  "description": "trim whitespace in streams",
+  "main": "index.js",
+  "scripts": {
+    "test": "lab test",
+    "test-watch": "nodemon ./node_modules/.bin/lab test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tjmehta/strim.git"
+  },
+  "keywords": [
+    "stream",
+    "trim",
+    "whitespace",
+    "replace",
+    "remove",
+    "spaces",
+    "endlines",
+    "blank",
+    "lines"
+  ],
+  "author": "Tejesh Mehta",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tjmehta/strim/issues"
+  },
+  "homepage": "https://github.com/tjmehta/strim",
+  "dependencies": {
+    "101": "^0.9.0",
+    "code": "^1.3.0",
+    "lab": "^5.2.1",
+    "through": "^2.3.6"
+  },
+  "devDependencies": {
+    "concat-stream": "^1.4.7"
+  }
+}
