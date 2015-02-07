@@ -4,8 +4,8 @@
   "description": "trim whitespace in streams",
   "main": "index.js",
   "scripts": {
-    "test": "lab test",
-    "test-watch": "nodemon ./node_modules/.bin/lab test"
+    "test": "lab -v -c",
+    "test-watch": "nodemon -x npm run test"
   },
   "repository": {
     "type": "git",
