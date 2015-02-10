@@ -8,6 +8,8 @@ var it = lab.it;
 var beforeEach = lab.beforeEach;
 var expect = Code.expect;
 var concat = require('concat-stream');
+var blacklight = require('blacklight');
+var trailWhitespace = /^(.*[^\s]+)(\s+)$/;
 
 describe('remove line trailing whitespace', function () {
   var ctx;
@@ -16,7 +18,7 @@ describe('remove line trailing whitespace', function () {
       ctx = {};
       var data = ' \n\t\n\r\n \t\r\n';
       ctx.chunks = data.split('');
-      ctx.expected = data.replace(/([^\s]*)((?!\n)\s)+$/gm, '$1');
+      ctx.expected = replaceLineTrailingWhitespaceInString(data);
       done();
     });
     describe('strings', function () {
@@ -34,58 +36,46 @@ describe('remove line trailing whitespace', function () {
     beforeEach(function (done) {
       ctx = {};
       var data = [
-        // ' \n',
-        // '\t\n',
-        // '\r\n',
-        // ' \t\r\n',
-        // ' \n',
-        // 'hey\t\n',
-        // 'hey\r\n',
-        // 'hey \t\r\n',
+        ' \n',
+        '\t\n',
+        '\r\n',
+        ' \t\r\n',
+        ' \n',
+        'hey\t\n',
+        'hey\r\n',
+        'hey \t\r\n',
         '\they\n',
-        // '\rhey\n',
-        // ' \they\r\n'
-      ].join('');
-      ctx.chunks = data.split('');
-      ctx.expected = [
-        // '\n',
-        // '\n',
-        // '\n',
-        // '\n',
-        // '\n',
-        // 'hey\n',
-        // 'hey\n',
-        // 'hey\n',
-        '\they\n',
-        // '\rhey\n',
-        // ' \they\n'
-      ].join('');
+        '\rhey\n',
+        ' \they'
+      ];
+      ctx.chunks = data;
+      ctx.expected = replaceLineTrailingWhitespaceInString(data.join(''));
       done();
     });
     describe('strings', function () {
       it('should trim trailing whitespace', shouldTrimLines);
     });
-    // describe('buffers', function () {
-    //   beforeEach(function (done) {
-    //     ctx.chunks = ctx.chunks.map(newBuffer);
-    //     done();
-    //   });
-    //   it('should trim trailing whitespace', shouldTrimLines);
-    // });
+    describe('buffers', function () {
+      beforeEach(function (done) {
+        ctx.chunks = ctx.chunks.map(newBuffer);
+        done();
+      });
+      it('should trim trailing whitespace', shouldTrimLines);
+    });
+    describe('ends with whitespace after end line', function() {
+      beforeEach(function (done) {
+        ctx.chunks.push('\nhey ');
+        ctx.expected += '\nhey';
+        done();
+      });
+      describe('strings', function () {
+        it('should trim trailing whitespace', shouldTrimLines);
+      });
+    });
   });
   function shouldTrimLines (done) {
     var replaceBlankLines = require('../lib/replace-line-trailing')();
     replaceBlankLines.pipe(concat(function (data) {
-      console.log(
-        data.toString()
-          .replace(/\n/g, '\\n')
-          .replace(/\r/g, '\\r')
-          .replace(/\t/g, '\\t'),
-        ctx.expected
-          .replace(/\n/g, '\\n')
-          .replace(/\r/g, '\\r')
-          .replace(/\t/g, '\\t')
-      );
       expect(data.toString()).to.equal(ctx.expected);
       done();
     }));
@@ -99,4 +89,9 @@ describe('remove line trailing whitespace', function () {
 
 function newBuffer (s) {
   return new Buffer(s);
+}
+function replaceLineTrailingWhitespaceInString (str) {
+  return str.split('\n').map(function (line) {
+    return line.replace(trailWhitespace, '$1').replace(/^\s+$/, '');
+  }).join('\n');
 }
