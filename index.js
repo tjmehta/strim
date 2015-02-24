@@ -1,27 +1,28 @@
 'use strict';
 
+var through = require('through');
+var defaults = require('101/defaults');
+
 /**
- * [exports description]
+ * Create a strim - stream whitespace trimmer
  * @param  {object} opts
- * {
- *   removeLineLeading
- *   removeLineTrailing
- *   removeBlankLines
- * }
+ * @param  {boolean} opts.removeLineTrailing - whether line-trailing whitespace
+ * @param  {boolean} opts.removeBlankLines   - whether or not to remove blank lines
  * @return {DuplexStream} strim - stream whitespace trimmer
  */
 
 var streams = {
-  removeLineLeading  : require('remove-line-leading')(),
-  removeLineTrailing : require('remove-line-trailing')(),
-  removeBlankLines   : require('remove-blank-lines')()
+  // TODO: removeLineLeading  : require('remove-line-leading')(),
+  trimLineTrailing : require('trim-line-trailing')(),
+  trimBlankLines   : require('trim-blank-lines')()
 };
 
 module.exports = function createStrim (opts) {
+  opts = defaults(opts)
   return [
-    'removeLineLeading',
-    'removeLineTrailing',
-    'removeBlankLines'
+    // TODO: 'removeLineLeading',
+    'trimLineTrailing',
+    'trimBlankLines'
   ].reduce(function (stream, transform) {
     return opts[transform] ?
       stream.pipe(streams[transform]) :
