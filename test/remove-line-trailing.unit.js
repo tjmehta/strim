@@ -1,15 +1,16 @@
 'use strict';
+
 var Code = require('code');
 var Lab = require('lab');
-var lab = exports.lab = Lab.script();
-
-var describe = lab.describe;
-var it = lab.it;
-var beforeEach = lab.beforeEach;
-var expect = Code.expect;
 var concat = require('concat-stream');
-var blacklight = require('blacklight');
+
+var lab = exports.lab = Lab.script();
 var trailWhitespace = /^(.*[^\s]+)(\s+)$/;
+
+var beforeEach = lab.beforeEach;
+var describe = lab.describe;
+var expect = Code.expect;
+var it = lab.it;
 
 describe('remove line trailing whitespace', function () {
   var ctx;
@@ -74,7 +75,7 @@ describe('remove line trailing whitespace', function () {
     });
   });
   function shouldTrimLines (done) {
-    var replaceBlankLines = require('../lib/replace-line-trailing')();
+    var replaceBlankLines = require('../lib/remove-line-trailing')();
     replaceBlankLines.pipe(concat(function (data) {
       expect(data.toString()).to.equal(ctx.expected);
       done();
@@ -86,10 +87,10 @@ describe('remove line trailing whitespace', function () {
   }
 });
 
-
 function newBuffer (s) {
   return new Buffer(s);
 }
+
 function replaceLineTrailingWhitespaceInString (str) {
   return str.split('\n').map(function (line) {
     return line.replace(trailWhitespace, '$1').replace(/^\s+$/, '');

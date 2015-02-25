@@ -1,13 +1,15 @@
 'use strict';
+
 var Code = require('code');
 var Lab = require('lab');
+var concat = require('concat-stream');
+
 var lab = exports.lab = Lab.script();
 
-var describe = lab.describe;
-var it = lab.it;
 var beforeEach = lab.beforeEach;
+var describe = lab.describe;
 var expect = Code.expect;
-var concat = require('concat-stream');
+var it = lab.it;
 
 describe('remove blank lines', function () {
   var ctx;
@@ -29,7 +31,7 @@ describe('remove blank lines', function () {
     it('should remove blank lines', shouldRemoveBlankLines);
   });
   function shouldRemoveBlankLines (done) {
-    var replaceBlankLines = require('../lib/replace-blank-lines')();
+    var replaceBlankLines = require('../lib/remove-blank-lines')();
     replaceBlankLines.pipe(concat(function (data) {
       expect(data.toString()).to.equal(ctx.expected);
       done();
@@ -40,7 +42,6 @@ describe('remove blank lines', function () {
     replaceBlankLines.end();
   }
 });
-
 
 function newBuffer (s) {
   return new Buffer(s);
