@@ -1,7 +1,6 @@
 'use strict';
 
 var through = require('through');
-var defaults = require('101/defaults');
 
 module.exports = createStrim;
 
@@ -12,19 +11,20 @@ var streams = {
 
 /**
  * Create a strim - stream whitespace trimmer
- * @param {object} opts
  * @return {DuplexStream} strim - stream whitespace trimmer
  */
-function createStrim (opts) {
-  opts = defaults(opts);
+function createStrim () {
+  return through(identity)
+    .pipe(streams.removeBlankLines)
+    .pipe(streams.removeLineTrailing);
+/*
   return [
     'removeLineTrailing',
     'removeBlankLines'
   ].reduce(function (stream, transform) {
-    return opts[transform] ?
-      stream.pipe(streams[transform]) :
-      stream;
+    return stream.pipe(streams[transform]);
   }, through(identity));
+*/
 }
 
 function identity (data) {
