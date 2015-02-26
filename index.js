@@ -6,7 +6,6 @@ var defaults = require('101/defaults');
 module.exports = createStrim;
 
 var streams = {
-  removeLineLeading:  require('./lib/remove-line-leading')(),
   removeLineTrailing: require('./lib/remove-line-trailing')(),
   removeBlankLines:   require('./lib/remove-blank-lines')()
 };
