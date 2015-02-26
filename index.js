@@ -19,7 +19,6 @@ var streams = {
 function createStrim (opts) {
   opts = defaults(opts);
   return [
-    'removeLineLeading',
     'removeLineTrailing',
     'removeBlankLines'
   ].reduce(function (stream, transform) {
