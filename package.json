@@ -4,7 +4,7 @@
   "description": "trim whitespace in streams",
   "main": "index.js",
   "scripts": {
-    "test": "lab -v -c",
+    "test": "lab -v -c -i 1",
     "test-watch": "nodemon -x npm run test"
   },
   "repository": {
@@ -32,6 +32,7 @@
     "101": "^0.9.0",
     "code": "^1.3.0",
     "lab": "^5.2.1",
+    "stream-combiner": "^0.2.1",
     "through": "^2.3.6"
   },
   "devDependencies": {

@@ -1,12 +1,12 @@
 'use strict';
 
-var through = require('through');
+var combine = require('stream-combiner');
 
 module.exports = createStrim;
 
 var streams = {
-  removeLineTrailing: require('./lib/remove-line-trailing')(),
-  removeBlankLines:   require('./lib/remove-blank-lines')()
+  removeLineTrailing: require('./lib/remove-line-trailing'),
+  removeBlankLines:   require('./lib/remove-blank-lines')
 };
 
 /**
@@ -14,19 +14,6 @@ var streams = {
  * @return {DuplexStream} strim - stream whitespace trimmer
  */
 function createStrim () {
-  return through(identity)
-    .pipe(streams.removeBlankLines)
-    .pipe(streams.removeLineTrailing);
-/*
-  return [
-    'removeLineTrailing',
-    'removeBlankLines'
-  ].reduce(function (stream, transform) {
-    return stream.pipe(streams[transform]);
-  }, through(identity));
-*/
-}
-
-function identity (data) {
-  this.queue(data);
+  return combine(streams.removeBlankLines(),
+    streams.removeLineTrailing());
 }
