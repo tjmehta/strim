@@ -12,6 +12,9 @@ var streams = {
 
 /**
  * Create a strim - stream whitespace trimmer
+ * @param {Object|null} opts - configurable options
+ *   - blank: true (remove blank lines)
+ *   - trailing: true (remove trailing whitespace from lines)
  * @return {DuplexStream} strim - stream whitespace trimmer
  */
 function createStrim (opts) {
