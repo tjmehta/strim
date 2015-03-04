@@ -23,7 +23,7 @@ describe('remove blank lines', function () {
   describe('strings', function () {
     it('should remove blank lines', shouldRemoveBlankLines);
   });
-  describe.only('buffers', function () {
+  describe('buffers', function () {
     beforeEach(function (done) {
       ctx.chunks = ctx.chunks.map(newBuffer);
       done();
