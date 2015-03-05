@@ -17,9 +17,7 @@ var equivalentDockerfiles = require('./fixtures/equivalent-dockerfiles');
 
 describe('remove blank lines', function () {
   var ctx;
-
   describe('all combinations of chunks', function () {
-
     beforeEach(function (done) {
       ctx = {};
       var dockerfile = ctx.dockerfile = new Buffer(" \t\r\n \t\r\n \t\r\n \t\r\nFROM "+
@@ -37,7 +35,23 @@ describe('remove blank lines', function () {
       done();
     });
 
-    it('should correctly trim', function (done) {
+    it('should correctly trim - strings', function (done) {
+      async.each(ctx.chunkSets, function (chunks, cb) {
+        var replaceBlankLines = require('../lib/remove-blank-lines')();
+        var data = '';
+        replaceBlankLines.on('data', function (d) {
+          data += d;
+        });
+        chunks.forEach(function (chunk) {
+          replaceBlankLines.write(chunk.toString());
+        });
+        replaceBlankLines.end();
+        expect(data).to.equal(ctx.expected);
+        cb();
+      }, done);
+    });
+
+    it('should correctly trim - buffers', function (done) {
       async.each(ctx.chunkSets, function (chunks, cb) {
         var replaceBlankLines = require('../lib/remove-blank-lines')();
         var data = '';
