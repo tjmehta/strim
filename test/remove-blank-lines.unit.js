@@ -3,8 +3,6 @@
 var Code = require('code');
 var Lab = require('lab');
 var async = require('async');
-var concat = require('concat-stream');
-var through = require('through');
 
 var lab = exports.lab = Lab.script();
 
@@ -12,8 +10,6 @@ var beforeEach = lab.beforeEach;
 var describe = lab.describe;
 var expect = Code.expect;
 var it = lab.it;
-
-var equivalentDockerfiles = require('./fixtures/equivalent-dockerfiles');
 
 describe('remove blank lines', function () {
   var ctx;
@@ -68,8 +64,20 @@ describe('remove blank lines', function () {
     });
   });
 
-  function toString (buffer) {
-    return buffer.toString();
-  }
+  describe('1 character chunks', function () {
+    it('should correctly trim blank lines', function (done) {
+      var replaceBlankLines = require('../lib/remove-blank-lines')();
+      var data = '';
+      replaceBlankLines.on('data', function (d) {
+        data += d;
+      });
+      ctx.dockerfile.toString().split('').forEach(function (char) {
+        replaceBlankLines.write(char);
+      });
+      replaceBlankLines.end();
+      expect(data).to.equal(ctx.expected);
+      done();
+    });
+  });
 
 });
